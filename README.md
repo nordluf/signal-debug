@@ -1,0 +1,2 @@
+# signal-debug
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/02db02a2ae9043b8a3fc6694498a31b8)](https://www.codacy.com/app/nordluf/signal-debug?utm_source=github.com&utm_medium=referral&utm_content=nordluf/signal-debug&utm_campaign=badger)
