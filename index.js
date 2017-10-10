@@ -56,7 +56,7 @@ function listener () {
     debug.enable(prefixes.join(','));
   } else {
     debug.enable(enabledPrefixes.join(','));
-    errorFuncs.forEach(logErrFn => {
+    errorFuncs.forEach((logErrFn) => {
       logErrFn.enabled = true;
     });
   }

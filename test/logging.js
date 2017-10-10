@@ -77,7 +77,7 @@ describe('Logging actually happens', () => {
     log3.debug('34');
     log4.debug('45');
     // clenaup timestamp in the begining of the line
-    const stdoutEndings = stdout.trim().split('\n').map(i => i.substr(25));
+    const stdoutEndings = stdout.trim().split('\n').map((i) => i.substr(25));
     assert.deepEqual(stdoutEndings, ['customprefix2 23', 'customprefix3 34']);
   });
 
