@@ -13,12 +13,26 @@ module.exports = (argsPrefix, argsOptions) => {
     errorsEnabled: !!argsOptions.errorsEnabled || false
   };
 
-  const logFn = debug(prefix);
-  const logErrFn = debug(prefix);
-  logFn.log = console.log.bind(console);
+  const logFnLog = debug(prefix);
+  const logFnInfo = debug(prefix);
+  const logFnWarn = debug(prefix);
+  const logFnDebug = debug(prefix);
+  const logFnError = debug(prefix);
+
+  logFnLog.color = 2;
+  logFnInfo.color = 3;
+  logFnWarn.color = 4;
+  logFnDebug.color = 0;
+  logFnError.color = 1;
+
+  logFnDebug.log =
+    logFnWarn.log =
+      logFnInfo.log =
+        logFnLog.log = console.log.bind(console);
+
   if (options.errorsEnabled) {
-    logErrFn.enabled = true;
-    errorFuncs.push(logErrFn);
+    logFnError.enabled = true;
+    errorFuncs.push(logFnError);
   }
 
   ~prefixes.indexOf(prefix) || prefixes.push(prefix);
@@ -34,15 +48,15 @@ module.exports = (argsPrefix, argsOptions) => {
   }
 
   const obj = {
-    log: logFn,
-    info: logFn,
-    local: logFn,
-    debug: logFn,
-    error: logErrFn
+    log: logFnLog,
+    info: logFnInfo,
+    warn: logFnWarn,
+    debug: logFnDebug,
+    error: logFnError
   };
 
   obj.func = (clb) => {
-    return logFn.enabled && clb(obj);
+    return logFnLog.enabled && clb(obj);
   };
 
   return obj;
