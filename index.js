@@ -6,7 +6,11 @@ const errorFuncs = [];
 let enabled = false;
 
 module.exports = (argsPrefix, argsOptions) => {
-  const prefix = argsPrefix || 'default';
+  if (typeof argsPrefix === 'object' && argsPrefix !== null) {
+    argsOptions = argsPrefix;
+    argsPrefix = 'default';
+  }
+  const prefix = (argsPrefix && argsPrefix.toString()) || 'default';
   argsOptions = argsOptions || {};
   const options = {
     startWithDebug: !!argsOptions.startWithDebug || false,
@@ -28,7 +32,7 @@ module.exports = (argsPrefix, argsOptions) => {
   logFnDebug.log =
     logFnWarn.log =
       logFnInfo.log =
-        logFnLog.log = console.log.bind(console);
+        logFnLog.log = console.log;
 
   if (options.errorsEnabled) {
     logFnError.enabled = true;
