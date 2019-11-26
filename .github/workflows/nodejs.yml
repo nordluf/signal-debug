@@ -14,6 +14,12 @@ jobs:
 
     steps:
       - uses: actions/checkout@v1
+      - name: Prepare repository
+        run: git switch "${GITHUB_REF:11}"
+      - name: Set git remote URL
+        run: git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Use Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v1
         with:
@@ -26,4 +32,4 @@ jobs:
           npm run releaseit
         env:
           CI: true
-
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
