@@ -219,4 +219,56 @@ describe('Signals processing', () => {
     assert.strictEqual(stdout, '');
     assert.strictEqual(stderrEnding, 'errprefix 23\n');
   });
+
+  it('emiting forceEnable twice keeps debug enabled', (done) => {
+    stderr = stdout = '';
+    process.emit('SIGUSR2', { forceEnable: true });
+
+    // To give some CPU to signal handling
+    setTimeout(function () {
+      process.emit('SIGUSR2', { forceEnable: true });
+
+      // To give some CPU to signal handling
+      setTimeout(function () {
+        assert.strictEqual(stdout, '');
+        assert.strictEqual(stderr, 'DEBUG MODE ENABLED\nDEBUG MODE ENABLED\n');
+        done();
+      }, 100);
+    }, 100);
+  });
+
+  it('After signal logging works for disabled logger', () => {
+    stderr = stdout = '';
+    log1.debug('128');
+    log1.error('err message number 2');
+    const stdoutEnding = stdout.substr(25); // clenaup timestamp in the begining of the line
+    const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
+    assert.strictEqual(stdoutEnding, 'default 128\n');
+    assert.strictEqual(stderrEnding, 'default err message number 2\n');
+  });
+
+  it('emiting forceDisable twice keeps debug disabled', (done) => {
+    stderr = stdout = '';
+    process.emit('SIGUSR2', { forceDisable: true });
+
+    // To give some CPU to signal handling
+    setTimeout(function () {
+      process.emit('SIGUSR2', { forceDisable: true });
+
+      // To give some CPU to signal handling
+      setTimeout(function () {
+        assert.strictEqual(stdout, '');
+        assert.strictEqual(stderr, 'DEBUG MODE DISABLED\nDEBUG MODE DISABLED\n');
+        done();
+      }, 100);
+    }, 100);
+  });
+
+  it('No output after signal', () => {
+    stderr = stdout = '';
+    log1.debug('123');
+    log1.error('234');
+    assert.strictEqual(stdout, '');
+    assert.strictEqual(stderr, '');
+  });
 });

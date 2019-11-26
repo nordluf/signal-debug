@@ -66,8 +66,11 @@ module.exports = (argsPrefix, argsOptions) => {
   return obj;
 };
 
-function listener () {
-  enabled = !enabled;
+function listener ({ forceEnable = false, forceDisable = false }) {
+  if (forceEnable && forceDisable) {
+    throw new Error('Illegal mix of forceEnable && forceDisable');
+  }
+  enabled = forceEnable ? true : forceDisable ? false : !enabled;
 
   console.error(`DEBUG MODE ${enabled ? 'ENABLED' : 'DISABLED'}`);
   if (enabled) {

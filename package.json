@@ -29,8 +29,8 @@
     "url": "https://github.com/nordluf/signal-debug/issues"
   },
   "engines": {
-    "node": ">= 4.8.0",
-    "npm": ">= 2.14.0"
+    "node": ">= 8.0.0",
+    "npm": ">= 6.0.0"
   },
   "homepage": "https://github.com/nordluf/signal-debug#readme",
   "devDependencies": {

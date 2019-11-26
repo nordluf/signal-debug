@@ -7,3 +7,7 @@
 
 
 Simply send USR2 singal to the node process to enable/disable logging output.
+
+process.emit('SIGUSR2', { forceDisable: true }); to clearly disable logging (doesn't matter if it was enabled or not) 
+ 
+process.emit('SIGUSR2', { forceEnable: true }); to apparently enable logging (doesn't matter if it was enabled or not)
