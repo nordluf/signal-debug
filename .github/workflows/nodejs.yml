@@ -27,7 +27,7 @@ jobs:
 
   pulishing:
     runs-on: ubuntu-latest
-
+    if: success()
     steps:
       - uses: actions/checkout@v1
       - name: Prepare repository
@@ -43,7 +43,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: 12.x
-      - name: npm install, build, and test
+      - name: npm release
         run: |
           npm ci
           echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > .npmrc
