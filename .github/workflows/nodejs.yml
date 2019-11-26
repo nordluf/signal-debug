@@ -17,7 +17,10 @@ jobs:
       - name: Prepare repository
         run: git switch "${GITHUB_REF:11}"
       - name: Set git remote URL
-        run: git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+        run: |
+          git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+          git config --global user.email "ekruglov@gmail.com"
+          git config --global user.name "Github Actions"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Use Node.js ${{ matrix.node-version }}
