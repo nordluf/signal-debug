@@ -30,8 +30,8 @@ describe('Logging actually happens', () => {
     stderr = stdout = '';
     log.debug('12');
     log.error('err message');
-    assert.equal(stdout, '');
-    assert.equal(stderr, '');
+    assert.strictEqual(stdout, '');
+    assert.strictEqual(stderr, '');
   });
 
   it('Default prefix .func no output', () => {
@@ -41,35 +41,35 @@ describe('Logging actually happens', () => {
       logobj.log(12);
       throw new Error('This should never happens');
     });
-    assert.equal(stdout, '');
-    assert.equal(stderr, '');
+    assert.strictEqual(stdout, '');
+    assert.strictEqual(stderr, '');
   });
 
   it('Default prefix with default debug output', () => {
-    const log = logger(null, {startWithDebug: true});
+    const log = logger(null, { startWithDebug: true });
     stderr = stdout = '';
     log.debug('12');
     log.error('err message');
     const stdoutEnding = stdout.substr(25); // clenaup timestamp in the begining of the line
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdoutEnding, 'default 12\n');
-    assert.equal(stderrEnding, 'default err message\n');
+    assert.strictEqual(stdoutEnding, 'default 12\n');
+    assert.strictEqual(stderrEnding, 'default err message\n');
   });
 
   it('Default prefix .func with default debug output', () => {
-    const log = logger(null, {startWithDebug: true});
+    const log = logger(null, { startWithDebug: true });
     stderr = stdout = '';
     log.func((logobj) => {
       logobj.log(12);
     });
     const stdoutEnding = stdout.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdoutEnding, 'default 12\n');
+    assert.strictEqual(stdoutEnding, 'default 12\n');
   });
 
   it('Multiple prefixes with output', () => {
     const log1 = logger('customprefix1');
-    const log2 = logger('customprefix2', {startWithDebug: true});
-    const log3 = logger('customprefix3', {startWithDebug: true});
+    const log2 = logger('customprefix2', { startWithDebug: true });
+    const log3 = logger('customprefix3', { startWithDebug: true });
     const log4 = logger('customprefix4');
     stdout = '';
     log1.debug('12');
@@ -78,17 +78,17 @@ describe('Logging actually happens', () => {
     log4.debug('45');
     // clenaup timestamp in the begining of the line
     const stdoutEndings = stdout.trim().split('\n').map((i) => i.substr(25));
-    assert.deepEqual(stdoutEndings, ['customprefix2 23', 'customprefix3 34']);
+    assert.deepStrictEqual(stdoutEndings, ['customprefix2 23', 'customprefix3 34']);
   });
 
   it('Enabled by default errors outputs, actualy', () => {
-    const log = logger('errprefix', {errorsEnabled: true});
+    const log = logger('errprefix', { errorsEnabled: true });
     stderr = stdout = '';
     log.debug('12');
     log.error('actual error');
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdout, '');
-    assert.equal(stderrEnding, 'errprefix actual error\n');
+    assert.strictEqual(stdout, '');
+    assert.strictEqual(stderrEnding, 'errprefix actual error\n');
   });
 
   after(() => {
@@ -106,16 +106,16 @@ describe('Signals processing', () => {
   before(function () {
     logger = require('../index.js');
     log1 = logger();
-    log2 = logger('customprefix', {startWithDebug: true});
-    log3 = logger('errprefix', {errorsEnabled: true});
+    log2 = logger('customprefix', { startWithDebug: true });
+    log3 = logger('errprefix', { errorsEnabled: true });
   });
 
   it('No output before signal', () => {
     stderr = stdout = '';
     log1.debug('12');
     log1.error('23');
-    assert.equal(stdout, '');
-    assert.equal(stderr, '');
+    assert.strictEqual(stdout, '');
+    assert.strictEqual(stderr, '');
   });
 
   it('Allowed output happens before signal', () => {
@@ -124,8 +124,8 @@ describe('Signals processing', () => {
     log2.error('23');
     const stdoutEnding = stdout.substr(25); // clenaup timestamp in the begining of the line
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdoutEnding, 'customprefix 12\n');
-    assert.equal(stderrEnding, 'customprefix 23\n');
+    assert.strictEqual(stdoutEnding, 'customprefix 12\n');
+    assert.strictEqual(stderrEnding, 'customprefix 23\n');
   });
 
   it('Allowed errors shows before signal', () => {
@@ -134,8 +134,8 @@ describe('Signals processing', () => {
     log3.error('23');
 
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdout, '');
-    assert.equal(stderrEnding, 'errprefix 23\n');
+    assert.strictEqual(stdout, '');
+    assert.strictEqual(stderrEnding, 'errprefix 23\n');
   });
 
   it('Signal enables debug', (done) => {
@@ -144,8 +144,8 @@ describe('Signals processing', () => {
 
     // To give some CPU to signal handling
     setTimeout(function () {
-      assert.equal(stdout, '');
-      assert.equal(stderr, 'DEBUG MODE ENABLED\n');
+      assert.strictEqual(stdout, '');
+      assert.strictEqual(stderr, 'DEBUG MODE ENABLED\n');
       done();
     }, 100);
   });
@@ -156,8 +156,8 @@ describe('Signals processing', () => {
     log1.error('err message');
     const stdoutEnding = stdout.substr(25); // clenaup timestamp in the begining of the line
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdoutEnding, 'default 12\n');
-    assert.equal(stderrEnding, 'default err message\n');
+    assert.strictEqual(stdoutEnding, 'default 12\n');
+    assert.strictEqual(stderrEnding, 'default err message\n');
   });
 
   it('After signal logging works for enabled logger', () => {
@@ -166,8 +166,8 @@ describe('Signals processing', () => {
     log2.error('err message');
     const stdoutEnding = stdout.substr(25); // clenaup timestamp in the begining of the line
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdoutEnding, 'customprefix 12\n');
-    assert.equal(stderrEnding, 'customprefix err message\n');
+    assert.strictEqual(stdoutEnding, 'customprefix 12\n');
+    assert.strictEqual(stderrEnding, 'customprefix err message\n');
   });
 
   it('After signal logging works for errorsOnly logger', () => {
@@ -176,8 +176,8 @@ describe('Signals processing', () => {
     log3.error('err message');
     const stdoutEnding = stdout.substr(25); // clenaup timestamp in the begining of the line
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdoutEnding, 'errprefix 12\n');
-    assert.equal(stderrEnding, 'errprefix err message\n');
+    assert.strictEqual(stdoutEnding, 'errprefix 12\n');
+    assert.strictEqual(stderrEnding, 'errprefix err message\n');
   });
 
   it('Signal disables debug', (done) => {
@@ -186,8 +186,8 @@ describe('Signals processing', () => {
 
     // To give some CPU to signal handling
     setTimeout(function () {
-      assert.equal(stdout, '');
-      assert.equal(stderr, 'DEBUG MODE DISABLED\n');
+      assert.strictEqual(stdout, '');
+      assert.strictEqual(stderr, 'DEBUG MODE DISABLED\n');
       done();
     }, 100);
   });
@@ -196,8 +196,8 @@ describe('Signals processing', () => {
     stderr = stdout = '';
     log1.debug('12');
     log1.error('23');
-    assert.equal(stdout, '');
-    assert.equal(stderr, '');
+    assert.strictEqual(stdout, '');
+    assert.strictEqual(stderr, '');
   });
 
   it('Allowed output happens after signal', () => {
@@ -206,8 +206,8 @@ describe('Signals processing', () => {
     log2.error('23');
     const stdoutEnding = stdout.substr(25); // clenaup timestamp in the begining of the line
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdoutEnding, 'customprefix 12\n');
-    assert.equal(stderrEnding, 'customprefix 23\n');
+    assert.strictEqual(stdoutEnding, 'customprefix 12\n');
+    assert.strictEqual(stderrEnding, 'customprefix 23\n');
   });
 
   it('Allowed errors shows after signal', () => {
@@ -216,7 +216,7 @@ describe('Signals processing', () => {
     log3.error('23');
 
     const stderrEnding = stderr.substr(25); // clenaup timestamp in the begining of the line
-    assert.equal(stdout, '');
-    assert.equal(stderrEnding, 'errprefix 23\n');
+    assert.strictEqual(stdout, '');
+    assert.strictEqual(stderrEnding, 'errprefix 23\n');
   });
 });

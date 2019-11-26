@@ -1,19 +1,18 @@
 {
   "name": "signal-debug",
-  "version": "0.0.0-development",
+  "version": "1.0.0",
   "description": "Start customisable debug output on USR2 signal.",
   "main": "index.js",
   "scripts": {
     "test": "DEBUG_COLORS=no mocha",
-    "test:coverage": "DEBUG_COLORS=no istanbul cover _mocha --report lcovonly -- -R spec && cat ./coverage/lcov.info | run.env codacy-coverage && rm -rf ./coverage",
     "lint": "semistandard",
-    "semantic-release": "semantic-release",
-    "travis-deploy-once": "travis-deploy-once"
+    "releaseit": "release-it --ci",
+    "pre-commit": "npm test && npm run lint && npm audit"
   },
   "husky": {
     "hooks": {
-      "commit-msg": "validate-commit-msg",
-      "pre-commit": "npm test && npm run lint"
+      "commit-msg": "commitlint -e",
+      "pre-commit": "npm run pre-commit"
     }
   },
   "repository": {
@@ -35,27 +34,26 @@
   },
   "homepage": "https://github.com/nordluf/signal-debug#readme",
   "devDependencies": {
-    "codacy-coverage": "^3.4.0",
-    "husky": "^1.3.1",
-    "istanbul": "^0.4.5",
-    "mocha": "^6.1.4",
-    "mocha-lcov-reporter": "^1.3.0",
-    "run.env": "^1.1.0",
-    "semantic-release": "^15.13.12",
-    "semistandard": "^11.0.0",
-    "travis-deploy-once": "^5.0.11",
-    "validate-commit-msg": "^2.14.0"
+    "@commitlint/cli": "^8.2.0",
+    "@commitlint/config-conventional": "^8.2.0",
+    "@release-it/bumper": "^1.0.5",
+    "@release-it/conventional-changelog": "^1.1.0",
+    "husky": "^3.0.0",
+    "mocha": "^6.2.0",
+    "release-it": "^12.4.3",
+    "semistandard": "^14.2.0"
   },
   "semistandard": {
-    "globals": [
-      "describe",
-      "before",
-      "beforeEach",
-      "after",
-      "it"
+    "env": [
+      "mocha"
     ]
   },
   "dependencies": {
-    "debug": "^3.2.6"
+    "debug": "^4.0.0"
+  },
+  "commitlint": {
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }
