@@ -28,7 +28,12 @@ function logger (argsPrefix: string, argsOptions: Options) {
     argsOptions = argsPrefix
     argsPrefix = 'default'
   }
-  const prefix = (argsPrefix && argsPrefix.toString()) || 'default'
+  let prefix = (argsPrefix && argsPrefix.toString()) || 'default'
+  if (/[^\w\d_:-]/ig.test(prefix)) {
+    console.error('WARNING: prefix contains unsupported symbols. They are stripped. Only /[^\\w\\d_:-]/ allowed')
+    prefix = prefix.replace(/[^\w\d_:-]/ig, '')
+  }
+
   argsOptions = argsOptions || {}
   const options = {
     startWithDebug: !!argsOptions.startWithDebug || false,
@@ -76,6 +81,8 @@ function logger (argsPrefix: string, argsOptions: Options) {
 
   return obj
 }
+
+logger.debug = logger
 
 function listener (signal: NodeJS.Signals) {
   const { forceEnable = false, forceDisable = false } = typeof signal === 'object' ? signal : {}
