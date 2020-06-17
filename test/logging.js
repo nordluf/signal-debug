@@ -22,7 +22,7 @@ process.stderr.write = ((write) => {
 
 describe('Logging actually happens', () => {
   before(function () {
-    logger = require('../index.js');
+    logger = require('../dist/index.js');
   });
 
   it('Default prefix no output', () => {
@@ -93,7 +93,7 @@ describe('Logging actually happens', () => {
 
   after(() => {
     logger.cleanup();
-    delete require.cache[require.resolve('../index.js')];
+    delete require.cache[require.resolve('../dist/index.js')];
     debug.disable('*');
   });
 });
@@ -104,7 +104,7 @@ describe('Signals processing', () => {
   let log3;
 
   before(function () {
-    logger = require('../index.js');
+    logger = require('../dist/index.js');
     log1 = logger();
     log2 = logger('customprefix', { startWithDebug: true });
     log3 = logger('errprefix', { errorsEnabled: true });

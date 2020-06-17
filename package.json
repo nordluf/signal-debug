@@ -2,12 +2,14 @@
   "name": "signal-debug",
   "version": "1.0.0",
   "description": "Start customisable debug output on USR2 signal.",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "test": "DEBUG_COLORS=no mocha",
-    "lint": "semistandard",
+    "test": "npm run build && DEBUG_COLORS=no mocha",
+    "lint": "standardx './src/**/*.ts' './test/**/*.ts'",
     "releaseit": "release-it --ci",
-    "pre-commit": "npm test && npm run lint && npm audit"
+    "pre-commit": "npm test && npm run lint && npm audit --prod",
+    "clean": "rm -rf ./dist",
+    "build": "npm run clean && tsc"
   },
   "husky": {
     "hooks": {
@@ -34,14 +36,20 @@
   },
   "homepage": "https://github.com/nordluf/signal-debug#readme",
   "devDependencies": {
-    "@commitlint/cli": "^8.2.0",
-    "@commitlint/config-conventional": "^8.2.0",
-    "@release-it/bumper": "^1.0.5",
-    "@release-it/conventional-changelog": "^1.1.0",
-    "husky": "^3.0.0",
-    "mocha": "^6.2.0",
-    "release-it": "^12.4.3",
-    "semistandard": "^14.2.0"
+    "@commitlint/cli": "^8.0.0",
+    "@commitlint/config-conventional": "^8.0.0",
+    "@release-it/bumper": "^1.1.1",
+    "@release-it/conventional-changelog": "^1.1.4",
+    "@types/debug": "^4.1.5",
+    "@types/node": "^12.12.47",
+    "@typescript-eslint/eslint-plugin": "^2.33.0",
+    "@typescript-eslint/parser": "^2.33.0",
+    "eslint": "^7.2.0",
+    "husky": "^4.2.5",
+    "mocha": "^7.0.0",
+    "release-it": "^13.0.0",
+    "standardx": "^5.0.0",
+    "typescript": "^3.9.5"
   },
   "semistandard": {
     "env": [
@@ -51,9 +59,24 @@
   "dependencies": {
     "debug": "^4.0.0"
   },
+  "files": [
+    "dist/*"
+  ],
   "commitlint": {
     "extends": [
       "@commitlint/config-conventional"
+    ]
+  },
+  "eslintConfig": {
+    "rules": {
+      "no-unused-vars": "off",
+      "@typescript-eslint/no-unused-vars": "error"
+    }
+  },
+  "standardx": {
+    "parser": "@typescript-eslint/parser",
+    "plugins": [
+      "@typescript-eslint/eslint-plugin"
     ]
   }
 }
