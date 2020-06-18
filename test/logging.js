@@ -94,6 +94,7 @@ describe('Logging actually happens', () => {
   after(() => {
     logger.cleanup();
     delete require.cache[require.resolve('../dist/index.js')];
+    delete require.cache[require.resolve('../dist/logger.js')];
     debug.disable('*');
   });
 });
