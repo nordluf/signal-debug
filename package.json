@@ -36,8 +36,8 @@
   },
   "homepage": "https://github.com/nordluf/signal-debug#readme",
   "devDependencies": {
-    "@commitlint/cli": "^8.0.0",
-    "@commitlint/config-conventional": "^8.0.0",
+    "@commitlint/cli": "^11.0.0",
+    "@commitlint/config-conventional": "^11.0.0",
     "@release-it/bumper": "^1.1.1",
     "@release-it/conventional-changelog": "^1.1.4",
     "@types/node": "^12.12.47",
