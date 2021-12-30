@@ -17,7 +17,7 @@
     }
   },
   "hooks": {
-    "before:init": "git tag --list 'v*' | sort -V | tail -1 > VERSION"
+    "before:init": "git tag --list 'v*' | sort -V | tail -1 > VERSION",
     "before:release": "ls -la && git status && git log"
   }
 }
