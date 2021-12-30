@@ -6,7 +6,7 @@
   "scripts": {
     "test": "npm run build && DEBUG_COLORS=no mocha",
     "lint": "standardx './*.ts'",
-    "releaseit": "release-it --ci",
+    "releaseit": "release-it --ci -VV",
     "pre-commit": "npm test && npm run lint && npm audit --prod",
     "clean": "rm -rf ./dist",
     "build": "npm run clean && tsc"
@@ -31,7 +31,7 @@
     "url": "https://github.com/nordluf/signal-debug/issues"
   },
   "engines": {
-    "node": ">= 8.0.0",
+    "node": ">= 10.0.0",
     "npm": ">= 6.0.0"
   },
   "homepage": "https://github.com/nordluf/signal-debug#readme",
