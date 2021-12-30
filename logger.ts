@@ -106,5 +106,4 @@ logger.cleanup = () => {
   process.removeListener('SIGUSR2', listener)
 }
 
-
 export default logger
