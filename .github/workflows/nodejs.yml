@@ -30,25 +30,16 @@ jobs:
     needs: tests
     steps:
       - uses: actions/checkout@v2
-      - name: Prepare repository
-        run: git switch "${GITHUB_REF:11}"
-      - name: Set git remote URL
-        run: |
-          git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
-          git config --global user.email "ekruglov@gmail.com"
-          git config --global user.name "Github Actions"
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: Use Node.js 12.x
         uses: actions/setup-node@v2
         with:
           node-version: 12.x
-      - name: npm release
-        run: |
-          npm ci
-          npm run build
-          echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > .npmrc
-          npm run releaseit
+      - run: git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
+      - run: git config --global user.email "ekruglov@gmail.com"
+      - run: git config --global user.name "Github Actions"
+      - run: npm ci && npm run build
+      - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > .npmrc
+      - run: npm run releaseit
         env:
           CI: true
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
