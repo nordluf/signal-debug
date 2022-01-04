@@ -1,6 +1,6 @@
 {
   "name": "signal-debug",
-  "version": "1.4.2",
+  "version": "1.0.0",
   "description": "Start customisable debug output on USR2 signal.",
   "main": "dist/index.js",
   "scripts": {
