@@ -1,18 +1,18 @@
-import { debug } from 'debug'
+import { debug } from 'debug';
 
-const prefixes: string[] = []
-const enabledPrefixes: string[] = []
-const errorFuncs: debug.Debugger[] = []
-let enabled = false
+const prefixes: string[] = [];
+const enabledPrefixes: string[] = [];
+const errorFuncs: debug.Debugger[] = [];
+let enabled = false;
 
 interface Options {
   startWithDebug: boolean;
   errorsEnabled: boolean;
 }
 
-type clbFunc = <T>(clb: (obj: logObj) => T) => T
+type clbFunc = <T>(clb: (obj: Object) => T) => T
 
-export interface logObj {
+export interface logObj extends Object {
   log: debug.Debugger;
   info: debug.Debugger;
   warn: debug.Debugger;
@@ -23,45 +23,45 @@ export interface logObj {
 
 function logger (argsPrefix: string, argsOptions: Options) {
   if (typeof argsPrefix === 'object' && argsPrefix !== null) {
-    argsOptions = argsPrefix
-    argsPrefix = 'default'
+    argsOptions = argsPrefix;
+    argsPrefix = 'default';
   }
-  let prefix = (argsPrefix && argsPrefix.toString()) || 'default'
+  let prefix = (argsPrefix && argsPrefix.toString()) || 'default';
   if (/[^\w\d_:-]/ig.test(prefix)) {
-    console.error('WARNING: prefix contains unsupported symbols. They are stripped. Only /[^\\w\\d_:-]/ allowed')
-    prefix = prefix.replace(/[^\w\d_:-]/ig, '')
+    console.error('WARNING: prefix contains unsupported symbols. They are stripped. Only /[^\\w\\d_:-]/ allowed');
+    prefix = prefix.replace(/[^\w\d_:-]/ig, '');
   }
 
-  argsOptions = argsOptions || {}
+  argsOptions = argsOptions || {};
   const options = {
     startWithDebug: !!argsOptions.startWithDebug || false,
     errorsEnabled: !!argsOptions.errorsEnabled || false
-  }
+  };
 
-  const logFnLog = debug(prefix)
-  const logFnError = debug(prefix)
+  const logFnLog = debug(prefix);
+  const logFnError = debug(prefix);
 
-  logFnLog.log = console.log
+  logFnLog.log = console.log;
 
   if (options.errorsEnabled) {
-    logFnError.enabled = true
-    errorFuncs.push(logFnError)
+    logFnError.enabled = true;
+    errorFuncs.push(logFnError);
   }
 
   if (!prefixes.includes(prefix)) {
-    prefixes.push(prefix)
+    prefixes.push(prefix);
   }
 
   if (options.startWithDebug) {
     if (!enabledPrefixes.includes(prefix)) {
-      enabledPrefixes.push(prefix)
+      enabledPrefixes.push(prefix);
     }
     if (!enabled) {
-      debug.enable(enabledPrefixes.join(','))
+      debug.enable(enabledPrefixes.join(','));
     }
   }
   if (enabled) {
-    debug.enable(prefixes.join(','))
+    debug.enable(prefixes.join(','));
   }
 
   const obj: logObj = {
@@ -71,39 +71,39 @@ function logger (argsPrefix: string, argsOptions: Options) {
     debug: logFnLog,
     error: logFnError,
     func: (() => {}) as clbFunc
-  }
+  };
 
   obj.func = (clb: Function) => {
-    return logFnLog.enabled && clb(obj)
-  }
+    return logFnLog.enabled && clb(obj);
+  };
 
-  return obj
+  return obj;
 }
 
-logger.debug = logger
+logger.debug = logger;
 
-function listener (signal: NodeJS.Signals) {
-  const { forceEnable = false, forceDisable = false } = typeof signal === 'object' ? signal : {}
+function listener (signal: NodeJS.Signals) { // eslint-disable-line no-undef
+  const { forceEnable = false, forceDisable = false } = typeof signal === 'object' ? signal : {};
   if (forceEnable && forceDisable) {
-    throw new Error('Illegal mix of forceEnable && forceDisable')
+    throw new Error('Illegal mix of forceEnable && forceDisable');
   }
-  enabled = forceEnable ? true : forceDisable ? false : !enabled
+  enabled = forceEnable ? true : forceDisable ? false : !enabled;
 
-  console.error(`DEBUG MODE ${enabled ? 'ENABLED' : 'DISABLED'}`)
+  console.error(`DEBUG MODE ${enabled ? 'ENABLED' : 'DISABLED'}`);
   if (enabled) {
-    debug.enable(prefixes.join(','))
+    debug.enable(prefixes.join(','));
   } else {
-    debug.enable(enabledPrefixes.join(','))
+    debug.enable(enabledPrefixes.join(','));
     errorFuncs.forEach((logErrFn) => {
-      logErrFn.enabled = true
-    })
+      logErrFn.enabled = true;
+    });
   }
 }
 
-process.on('SIGUSR2', listener)
+process.on('SIGUSR2', listener);
 
 logger.cleanup = () => {
-  process.removeListener('SIGUSR2', listener)
-}
+  process.removeListener('SIGUSR2', listener);
+};
 
-export default logger
+export default logger;

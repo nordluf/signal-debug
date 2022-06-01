@@ -10,7 +10,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [10.x, 12.x, 14.x]
+        node-version: [10.x, 12.x, 14.x, 16.x]
 
     steps:
       - uses: actions/checkout@v2
@@ -21,7 +21,7 @@ jobs:
       - name: npm install, build, and test
         run: |
           npm ci
-          npm run pre-commit
+          npm test
         env:
           CI: true
 
@@ -32,14 +32,15 @@ jobs:
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
-      - name: Use Node.js 12.x
+      - name: Use Node.js 16.x
         uses: actions/setup-node@v2
         with:
-          node-version: 12.x
+          node-version: 16.x
       - run: git remote set-url origin https://x-access-token:$GITHUB_TOKEN@github.com/$GITHUB_REPOSITORY
       - run: git config --global user.email "ekruglov@gmail.com"
       - run: git config --global user.name "Github Actions"
-      - run: npm ci && npm run build
+      - run: npm ci
+      - run: npm run pre-commit
       - run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > .npmrc
       - run: npm run releaseit
         env:
